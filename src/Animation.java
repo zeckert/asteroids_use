@@ -33,11 +33,6 @@ public class Animation {
         frames.add(new AnimFrame(image, totalDuration));
     }
 
-    public synchronized void addMyFrame(MyInternalFrame frame, long duration)
-    {
-    	totalDuration+=duration;
-    	frames.add(new AnimFrame(frame, totalDuration));
-    }
 
     /**
         Starts this animation over from the beginning.
@@ -96,14 +91,5 @@ public class Animation {
             this.image = image;
             this.endTime = endTime;
         }
-     
-    }
-    private class AnimFrame2 {
-    	MyInternalFrame frame;
-    	long endTime;
-    
-    public AnimFrame2(MyInternalFrame frame, long endTime){
-    	this.frame = frame;
-    	this.endTime=endTime;
     }
 }
