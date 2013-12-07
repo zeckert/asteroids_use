@@ -31,6 +31,9 @@ public class Sprite {
     	asteroidType = type;
     	alienLives = 2;
     }
+    public void setAsteroidType(String type){
+    	asteroidType = type;
+    }
     /**
         Updates this Sprite's Animation and its position based
         on the velocity.
