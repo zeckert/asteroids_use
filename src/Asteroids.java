@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
+
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -939,7 +940,7 @@ public class Asteroids {
         
         
         String s = (String)JOptionPane.showInputDialog(myFrame,"Name save file:\n","Save File",JOptionPane.PLAIN_MESSAGE,icon,null,"");
-        s = s+".txt";
+        s = s+".sav";
         try {
             out = new BufferedWriter(new FileWriter(s));
             System.out.println(s);
@@ -999,12 +1000,13 @@ public void loadGame(){
      if (listOfFiles[i].isFile()) 
      {
      files = listOfFiles[i].getName();
-         if (files.endsWith(".txt") || files.endsWith(".TXT"))
+         if ((files.endsWith(".sav") || files.endsWith(".SAV"))&&!files.startsWith("null"))
          {
             textFiles.add(files);                      
     }
        }
     }
+    if(textFiles.toArray().length>0){
         String s = (String)JOptionPane.showInputDialog(myFrame,"Choose file to Load:\n","Load File",JOptionPane.PLAIN_MESSAGE,icon,textFiles.toArray(),"");
         playerSprites.clear();
         asteroidSprites.clear();
@@ -1098,8 +1100,167 @@ public void loadGame(){
     }
     
     catch(IOException e){}
+        
+    }
+    else{
+   	 String s = (String)JOptionPane.showInputDialog(myFrame,"No Saved Files to Load\n","Load File",JOptionPane.PLAIN_MESSAGE,icon,null,"");
+   }
   }
 
+
+public void highScore(){
+
+	MyInternalFrame myFrame = new MyInternalFrame();
+	Icon icon = null;
+	myFrame.toFront();
+	myFrame.setVisible(true);
+	int line_num = 0;
+	boolean highscore = false;
+	String[] score_curr = null;
+	String[] score_next = null;
+	try {
+		myFrame.setSelected(true);
+	} catch (java.beans.PropertyVetoException e) {}
+	try{
+		File file = new File("highscore.txt");
+		FileReader reader = new FileReader(file);
+		BufferedReader br = new BufferedReader(reader);
+		ArrayList<String> file_string = new ArrayList<String>();
+		String line = br.readLine();
+		while (line != null) {
+			file_string.add(line);
+		}
+
+		for(int i = 9; i>=0; i--){
+			score_curr = ((String) file_string.toArray()[i]).split(" ");
+			
+			int score_num = Integer.parseInt(score_curr[2]);
+			if(i > 0){
+				score_next = ((String) file_string.toArray()[i-1]).split(" ");
+				int score_next_num = Integer.parseInt(score_next[2]);
+				if(playerSprites.get(0).getPlayerScore() > score_num && playerSprites.get(0).getPlayerScore() < score_next_num){
+					String s = (String)JOptionPane.showInputDialog(myFrame,"Congratulations! You have a high score!\n Please enter your 3 digit character tag\n","Congratulations",JOptionPane.PLAIN_MESSAGE,icon,null,"");
+					s = s.substring(0,3);
+					line_num = i;
+					highscore = true;
+					
+				}
+			}
+			else if(i == 0){
+				if(playerSprites.get(0).getPlayerScore() > score_num){
+					String s = (String)JOptionPane.showInputDialog(myFrame,"Congratulations! You have a high score!\n Please enter your 3 digit character tag\n","Congratulations",JOptionPane.PLAIN_MESSAGE,icon,null,"");
+					s = s.substring(0,3);
+					line_num = i;
+					highscore = true;
+				}	
+			}
+		}
+		if(highscore){
+		for(int i = 9; i>line_num; i--){
+			file_string.toArray()[i] = file_string.toArray()[i-1];
+		}
+		file_string.toArray()[line_num] = line_num+"s"+playerSprites.get(0).getPlayerScore();
+		}
+		for(int i = 0; i>file_string.toArray().length;i++){
+			System.out.println(file_string.toArray()[i]);
+		}
+		br.close();
+	}
+	catch(IOException e){}
 }
-    
+public static void highScorePls(int p1Score, int p2Score){
+	MyInternalFrame myFrame = new MyInternalFrame();
+	Icon icon = null;
+	myFrame.toFront();
+	myFrame.setVisible(true);
+	try {
+		myFrame.setSelected(true);
+	} catch (java.beans.PropertyVetoException e) {}
 	
+	int line_num = 0;
+	boolean highscore = false;
+	boolean highscore2 = false;
+	String[] score_curr = null;
+	String[] score_next = null;
+	String s = null;
+	try{
+		StringBuilder sb = new StringBuilder();
+		
+		File file = new File("highscore.txt");
+		FileReader reader = new FileReader(file);
+		BufferedReader br = new BufferedReader(reader);
+		ArrayList<String> file_string = new ArrayList<String>();
+		String line = br.readLine();
+		while (line != null) {
+			file_string.add(line);
+			line = br.readLine();
+		}
+		
+		for(int i = 9; i>=0; i--){
+			score_curr = ((String) file_string.toArray()[i]).split(" ");
+			
+			int score_num = Integer.parseInt(score_curr[2]);
+			if(i > 0){
+				score_next = ((String) file_string.toArray()[i-1]).split(" ");
+				int score_next_num = Integer.parseInt(score_next[2]);
+				if(p1Score > score_num && p1Score < score_next_num){
+					s = (String)JOptionPane.showInputDialog(myFrame,"Congratulations! You have a high score!\n Please enter your 3 digit character tag\n","Congratulations",JOptionPane.PLAIN_MESSAGE,icon,null,"");
+					s = s.substring(0,3);
+					line_num = i;
+					highscore = true;
+				}
+				else if(p2Score > score_num && p2Score < score_next_num){
+					s = (String)JOptionPane.showInputDialog(myFrame,"Congratulations! You have a high score!\n Please enter your 3 digit character tag\n","Congratulations",JOptionPane.PLAIN_MESSAGE,icon,null,"");
+					s = s.substring(0,3);
+					line_num = i;
+					highscore2 = true;
+				}
+				
+			
+			}
+			else if(i == 0){
+				System.out.println(i);
+				//int score_num = Integer.parseInt(score_curr[2]);
+				if(p1Score > score_num){
+					s = (String)JOptionPane.showInputDialog(myFrame,"Congratulations! You have a high score!\n Please enter your 3 digit character tag\n","Congratulations",JOptionPane.PLAIN_MESSAGE,icon,null,"");
+					s = s.substring(0,3);
+					line_num = i;
+					highscore = true;
+				}	
+				else if(p2Score > score_num){
+					s = (String)JOptionPane.showInputDialog(myFrame,"Congratulations! You have a high score!\n Please enter your 3 digit character tag\n","Congratulations",JOptionPane.PLAIN_MESSAGE,icon,null,"");
+					s = s.substring(0,3);
+					line_num = i;
+					highscore2 = true;
+				}
+				System.out.println(i);
+			}
+		}
+		System.out.println("here I am");
+		if(highscore){
+		for(int i = 9; i>line_num; i--){
+			file_string.toArray()[i] = file_string.toArray()[i-1];
+		}
+		file_string.toArray()[line_num] = line_num+ s +p1Score;
+		}
+		else if(highscore2){
+			for(int i = 9; i>line_num; i--){
+				file_string.toArray()[i] = file_string.toArray()[i-1];
+			}
+			file_string.toArray()[line_num] = line_num+"s"+p2Score;
+		}
+		System.out.println(file_string.toArray()[line_num]);
+		//for(int i = 0; i<file_string.toArray().length;i++){
+			//sb.append(file_string.toArray()[i]);
+			//System.out.println("hello");
+			//System.out.println(file_string.toArray()[i]);
+		//}
+		//System.out.print(sb.toString());
+		
+		br.close();
+	}
+	catch(IOException e){}
+}
+}
+
+

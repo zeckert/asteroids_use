@@ -1,6 +1,12 @@
 import java.awt.Graphics2D;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
 
 
@@ -11,17 +17,19 @@ public class CollisionDetection extends Thread{
 	
 	private void playerDied()
 	{
+		
 	}
 	
 	private void highScore()
 	{
 		playerDied();
 		int p1Score = Asteroids.playerSprites.get(0).getPlayerScore();
-
+		int p2Score = 0;
 		if (Asteroids.MULTIPLAYER_ACTIVE)
 		{	
-			int p2Score = Asteroids.playerSprites.get(1).getPlayerScore();
+			 p2Score = Asteroids.playerSprites.get(1).getPlayerScore();
 		}
+		Asteroids.highScorePls(p1Score, p2Score);
 	}
 	
 	public void run() {
@@ -152,9 +160,10 @@ public class CollisionDetection extends Thread{
 									Asteroids.respawnSpaceship(j);
 								}	
 								else { // player has no more lives and there's a collision, so end game!
+									highScore();
 									Asteroids.inputManager.resetAllGameActions();
 									Asteroids.asteroidSprites.clear();
-									highScore();	
+										
 									Asteroids.initilization();
 									break;
 								}						
@@ -231,4 +240,5 @@ public class CollisionDetection extends Thread{
 		}
 		return false;
 	}
+	
 }
